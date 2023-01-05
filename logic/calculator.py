@@ -23,12 +23,12 @@ class Calculator:
 
     def evaluate(self, expression: str, save: bool, **operation_options: Union[bool, str]) -> str:
         self.__tokenizer.parse(expression)
-        result: float = self.evaluate_rpn(self.__to_rpn(), **operation_options)
-        formatted_result: str = str(int(result) if result // 1 == result else result)
+        result: str = str(round(self.evaluate_rpn(self.__to_rpn(), **operation_options), 15))
+        result = result.replace('.0', '')
         if save:
-            self.__history.insert(0, {'expression': expression, 'result': formatted_result})
+            self.__history.insert(0, {'expression': expression, 'result': result})
 
-        return formatted_result
+        return result
 
     def __to_rpn(self) -> list[tokenizer.Token_t]:
         operators: list[tokenizer.Operator_T] = []

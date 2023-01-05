@@ -6,7 +6,7 @@ from logic import tokenizer
 class Number(tokenizer._Operand):
     @staticmethod
     def pattern() -> re.Pattern:
-        return re.compile(fr"\d+(?:\.\d+)?(?:e-\d+)?")
+        return re.compile(fr"\d+(?:\.\d+)?(?:e(?:-|\+)\d+)?")
 
     @property
     def cast(self):
