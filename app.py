@@ -4,7 +4,7 @@ import re
 import math
 from typing import Callable
 from dataclasses import dataclass
-from flask import Flask, render_template, request, json
+from flask import Flask, render_template, request, json, make_response, Response
 from flask_cors import CORS, cross_origin
 from logic.calculator import Calculator, verify_functions, verify_groups
 import logic.default_rules as dr
@@ -23,7 +23,8 @@ def evaluate():
         return str(calculator.evaluate(inp['expression'], True, **inp['options']))
     except Exception as e:
         print(e)
-        return 'ERROR'
+        resp = make_response(str(e), 500)
+        return resp
 
 
 @app.route('/history', methods=['GET'])
