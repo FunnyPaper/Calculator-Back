@@ -5,42 +5,6 @@ from logic import tokenizer
 
 
 # unlimited arg (arg list are more over reduced to single value)
-class FunctionAdd(tokenizer.Function):
-    def operation(self, pack, **options):
-        return super().operation(pack) + sum(pack)
-
-    @staticmethod
-    def pattern():
-        return re.compile(fr"ADD", re.I)
-
-
-class FunctionSubtract(tokenizer.Function):
-    def operation(self, pack, **options):
-        return super().operation(pack) + reduce(lambda a, b: a - b, pack)
-
-    @staticmethod
-    def pattern():
-        return re.compile(fr"SUB", re.I)
-
-
-class FunctionMultiply(tokenizer.Function):
-    def operation(self, pack, **options):
-        return super().operation(pack) + reduce(lambda a, b: a * b, pack)
-
-    @staticmethod
-    def pattern():
-        return re.compile(fr"MUL", re.I)
-
-
-class FunctionDivide(tokenizer.Function):
-    def operation(self, pack, **options):
-        return super().operation(pack) + reduce(lambda a, b: a / b, pack)
-
-    @staticmethod
-    def pattern():
-        return re.compile(fr"DIV", re.I)
-
-
 class FunctionModulo(tokenizer.Function):
     def operation(self, pack, **options):
         return super().operation(pack) + reduce(lambda a, b: a % b, pack)
@@ -52,11 +16,11 @@ class FunctionModulo(tokenizer.Function):
 
 class FunctionFloorDivision(tokenizer.Function):
     def operation(self, pack, **options):
-        return super().operation(pack) + reduce(lambda a, b: a // b, pack)
+        return super().operation(pack) + (reduce(lambda a, b: a // b, pack) if len(pack) > 1 else pack[0] // 1)
 
     @staticmethod
     def pattern():
-        return re.compile(fr"FLOOR", re.I)
+        return re.compile(fr"FDIV", re.I)
 
 
 class FunctionMin(tokenizer.Function):
@@ -105,6 +69,42 @@ class FunctionLog(tokenizer.Function):
     @staticmethod
     def pattern():
         return re.compile(fr"LOG", re.I)
+
+
+class FunctionAdd(tokenizer.Function):
+    def operation(self, pack, **options):
+        return super().operation(pack) + sum(pack)
+
+    @staticmethod
+    def pattern():
+        return re.compile(fr"ADD", re.I)
+
+
+class FunctionSubtract(tokenizer.Function):
+    def operation(self, pack, **options):
+        return super().operation(pack) + reduce(lambda a, b: a - b, pack)
+
+    @staticmethod
+    def pattern():
+        return re.compile(fr"SUB", re.I)
+
+
+class FunctionMultiply(tokenizer.Function):
+    def operation(self, pack, **options):
+        return super().operation(pack) + reduce(lambda a, b: a * b, pack)
+
+    @staticmethod
+    def pattern():
+        return re.compile(fr"MUL", re.I)
+
+
+class FunctionDivide(tokenizer.Function):
+    def operation(self, pack, **options):
+        return super().operation(pack) + reduce(lambda a, b: a / b, pack)
+
+    @staticmethod
+    def pattern():
+        return re.compile(fr"DIV", re.I)
 
 
 # 1 arg only
