@@ -131,15 +131,16 @@ Operand_T = TypeVar('Operand_T', bound=_Operand)
 
 
 class Rule:
-    __group: Sequence[Token_t, ...] = []
-    __before: list[Token_t, ...] = []
-    __after: list[Token_t, ...] = []
+    __group: list[Token_t] = []
+    __before: list[Token_t] = []
+    __after: list[Token_t] = []
 
-    def __init__(self, group: Sequence[Token_t, ...]):
+    def __init__(self, group: list[Token_t]):
         if len(group) == 0:
             raise ValueError("Rule cannot be empty")
 
-        self.__group = group
+        # Resolve longer tokens first (for similar tokens pattern - ex FDIV and DIV)
+        self.__group = sorted(group, key=lambda g: len(g.pattern().pattern), reverse=True)
 
     @property
     def group(self) -> Sequence[Token_t, ...]:
