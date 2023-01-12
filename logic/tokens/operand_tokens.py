@@ -1,9 +1,9 @@
 import math
 import re
-from logic import tokenizer
+from logic.tokens.primitive_tokens import _Operand
 
 
-class Number(tokenizer._Operand):
+class Number(_Operand):
     @staticmethod
     def pattern() -> re.Pattern:
         return re.compile(fr"\d+(?:\.\d+)?(?:e(?:-|\+)\d+)?")
@@ -13,7 +13,7 @@ class Number(tokenizer._Operand):
         return float(self.value)
 
 
-class Constant(tokenizer._Operand):
+class Constant(_Operand):
     pass
 
 

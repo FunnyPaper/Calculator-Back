@@ -1,8 +1,8 @@
 import re
-from logic import tokenizer
+from logic.tokens.primitive_tokens import Binary, _Associativity
 
 
-class BinaryPlus(tokenizer.Binary):
+class BinaryPlus(Binary):
     @property
     def precedence(self):
         return 1
@@ -17,7 +17,7 @@ class BinaryPlus(tokenizer.Binary):
         return re.compile(fr"\+")
 
 
-class BinaryMinus(tokenizer.Binary):
+class BinaryMinus(Binary):
     @property
     def precedence(self):
         return 1
@@ -32,7 +32,7 @@ class BinaryMinus(tokenizer.Binary):
         return re.compile(fr"-")
 
 
-class BinaryMultiply(tokenizer.Binary):
+class BinaryMultiply(Binary):
     @property
     def precedence(self):
         return 2
@@ -47,7 +47,7 @@ class BinaryMultiply(tokenizer.Binary):
         return re.compile(fr"\*")
 
 
-class BinaryDivide(tokenizer.Binary):
+class BinaryDivide(Binary):
     @property
     def precedence(self):
         return 2
@@ -62,7 +62,7 @@ class BinaryDivide(tokenizer.Binary):
         return re.compile(fr"/")
 
 
-class BinaryModulo(tokenizer.Binary):
+class BinaryModulo(Binary):
     @property
     def precedence(self):
         return 2
@@ -77,14 +77,14 @@ class BinaryModulo(tokenizer.Binary):
         return re.compile(fr"%")
 
 
-class BinaryExponent(tokenizer.Binary):
+class BinaryExponent(Binary):
     @property
     def precedence(self):
         return 3
 
     @property
     def associativity(self):
-        return tokenizer._Associativity.RTL
+        return _Associativity.RTL
 
     def operation(self, pack, **options):
         super().operation(pack)

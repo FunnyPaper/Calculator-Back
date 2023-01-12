@@ -1,19 +1,19 @@
 import re
 import math
-from logic import tokenizer
+from logic.tokens.primitive_tokens import Unary, _Associativity
 
 
-class UnaryLeft(tokenizer.Unary):
+class UnaryLeft(Unary):
     @property
     def precedence(self):
         return 3
 
     @property
     def associativity(self):
-        return tokenizer._Associativity.RTL
+        return _Associativity.RTL
 
 
-class UnaryRight(tokenizer.Unary):
+class UnaryRight(Unary):
     @property
     def precedence(self):
         return 4
