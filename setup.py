@@ -1,6 +1,6 @@
 from logic import tokenizer
-from logic.calculator import Calculator
-from validators.custom import *
+from logic import Calculator
+from validators import *
 
 # Required for Rule objects (and __subclasses__ method)
 from logic.tokens import operand_tokens, unary_tokens, binary_tokens, function_tokens

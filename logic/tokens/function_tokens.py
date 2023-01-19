@@ -1,7 +1,7 @@
 from functools import reduce
 import math
 import re
-from logic.tokens.primitive_tokens import Function
+from .primitive_tokens import Function
 
 
 # unlimited arg (arg list are more over reduced to single value)

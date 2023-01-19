@@ -1,5 +1,5 @@
 import re
-from logic.tokens.primitive_tokens import Binary, _Associativity
+from .primitive_tokens import Binary, Associativity
 
 
 class BinaryPlus(Binary):
@@ -84,7 +84,7 @@ class BinaryExponent(Binary):
 
     @property
     def associativity(self):
-        return _Associativity.RTL
+        return Associativity.RTL
 
     def operation(self, pack, **options):
         super().operation(pack)

@@ -1,7 +1,7 @@
 import re
 from collections.abc import Sequence
 from typing import Callable
-from logic.tokens.primitive_tokens import Token_t, AnyChar
+from .tokens import Token_t, AnyChar
 
 
 class Rule:

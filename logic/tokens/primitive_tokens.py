@@ -56,27 +56,27 @@ class AnyChar(_Special):
         return re.compile(".+")
 
 
-class _Operand(Token):
+class Operand(Token):
     @property
     @abstractmethod
     def cast(self) -> float:
         pass
 
 
-class _Associativity(IntEnum):
+class Associativity(IntEnum):
     LTR = 0
     RTL = 1
 
 
-class _Operator(Token):
+class Operator(Token):
     @property
     @abstractmethod
     def precedence(self) -> int:
         pass
 
     @property
-    def associativity(self) -> _Associativity:
-        return _Associativity.LTR
+    def associativity(self) -> Associativity:
+        return Associativity.LTR
 
     @abstractmethod
     def operation(self, pack: list[float], **options: Union[bool, str]) -> float:
@@ -91,7 +91,7 @@ class _Operator(Token):
         return 1, math.inf
 
 
-class Binary(_Operator):
+class Binary(Operator):
     @property
     def args_min_max(self) -> tuple[float, float]:
         return 2, 2
@@ -112,18 +112,18 @@ class BinaryComma(Binary):
         return re.compile(fr",")
 
 
-class Unary(_Operator):
+class Unary(Operator):
     @property
     def args_min_max(self) -> tuple[float, float]:
         return 1, 1
 
 
-class Function(_Operator):
+class Function(Operator):
     @property
     def precedence(self) -> int:
         return 5
 
 
 Token_t = TypeVar('Token_t', bound=Token)
-Operator_T = TypeVar('Operator_T', bound=_Operator)
-Operand_T = TypeVar('Operand_T', bound=_Operand)
+Operator_T = TypeVar('Operator_T', bound=Operator)
+Operand_T = TypeVar('Operand_T', bound=Operand)

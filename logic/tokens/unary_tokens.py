@@ -1,6 +1,6 @@
 import re
 import math
-from logic.tokens.primitive_tokens import Unary, _Associativity
+from .primitive_tokens import Unary, Associativity
 
 
 class UnaryLeft(Unary):
@@ -10,7 +10,7 @@ class UnaryLeft(Unary):
 
     @property
     def associativity(self):
-        return _Associativity.RTL
+        return Associativity.RTL
 
 
 class UnaryRight(Unary):

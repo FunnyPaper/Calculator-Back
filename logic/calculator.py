@@ -1,8 +1,7 @@
-from logic import tokenizer
+from . import tokenizer
 from typing import Union, Callable
 import collections.abc
-from logic.tokens.primitive_tokens import *
-from logic.tokens.primitive_tokens import _Operand, _Operator, _Associativity
+from .tokens import *
 
 
 class Calculator:
@@ -33,7 +32,7 @@ class Calculator:
         operators: list[Operator_T] = []
         result: list[Token_t] = []
         for token in self.__tokenizer.tokens:
-            if issubclass(type(token), _Operand):
+            if issubclass(type(token), Operand):
                 result.append(token)
             elif issubclass(type(token), (Function, OpenBracket)):
                 operators.append(token)
@@ -43,11 +42,11 @@ class Calculator:
                 else:
                     operators.pop()
 
-            elif issubclass(type(token), _Operator):
+            elif issubclass(type(token), Operator):
                 while (len(operators) > 0 and not issubclass(type(operators[-1]), OpenBracket) and
                        (operators[-1].precedence > token.precedence or
                        (operators[-1].precedence == token.precedence and
-                        token.associativity == _Associativity.LTR))):
+                        token.associativity == Associativity.LTR))):
                     result.append(operators.pop())
 
                 operators.append(token)
@@ -61,7 +60,7 @@ class Calculator:
     def evaluate_rpn(self, rpn: list[Token_t, ...], **options: Union[bool, str]) -> float:
         numbers: list[Union[float, list[float]]] = []
         for token in rpn:
-            if issubclass(type(token), _Operand):
+            if issubclass(type(token), Operand):
                 numbers.append(token.cast)
             elif issubclass(type(token), Binary):
                 args, numbers = numbers[-2:], numbers[:-2]
