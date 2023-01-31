@@ -5,13 +5,16 @@ from .tokens import Token_t, AnyChar
 
 
 class Rule:
-    __group: list[Token_t] = []
-    __before: list[Token_t] = []
-    __after: list[Token_t] = []
+    __group: list[Token_t]
+    __before: list[Token_t]
+    __after: list[Token_t]
 
     def __init__(self, group: list[Token_t]):
         if len(group) == 0:
             raise ValueError("Rule cannot be empty")
+
+        self.__before = []
+        self.__after = []
 
         # Resolve longer tokens first (for similar tokens pattern - ex FDIV and DIV)
         self.__group = sorted(group, key=lambda g: len(g.pattern().pattern), reverse=True)
@@ -38,10 +41,16 @@ class Rule:
 
 
 class Tokenizer:
-    __rules: dict[str, Rule] = dict()
-    __tokens: list[Token_t] = None
+    __rules: dict[str, Rule]
+    __tokens: list[Token_t]
     __validators: tuple[Callable[[list[Token_t]], None]]
-    __pattern: re.Pattern = None
+    __pattern: re.Pattern
+
+    def __init__(self):
+        self.__rules = dict()
+        self.__tokens = []
+        self.__validators = ()
+        self.__pattern = None
 
     @property
     def tokens(self) -> list[Token_t]:
@@ -52,7 +61,7 @@ class Tokenizer:
             if not isinstance(v, Rule):
                 raise ValueError(f"{k} rule must be an instance of {Rule} or one of it's subclass", str(v))
 
-        self.__rules.update(kwargs)
+        self.__rules = kwargs
 
     def set_validators(self, *validators: Callable[[list[Token_t]], None]):
         self.__validators = validators

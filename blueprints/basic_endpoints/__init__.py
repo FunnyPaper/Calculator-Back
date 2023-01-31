@@ -10,7 +10,8 @@ blueprint: Blueprint = Blueprint('basic_endpoints', __name__)
 def evaluate():
     try:
         inp = request.get_json()
-        return str(calculator.evaluate(inp['expression'], True, **inp['options']))
+        calculator.evaluate(inp['expression'], True, **inp['options'])
+        return calculator.history[-1]["result"]
     except Exception as e:
         print(e)
         resp = make_response(str(e), 500)
