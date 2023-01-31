@@ -11,7 +11,7 @@ def evaluate():
     try:
         inp = request.get_json()
         calculator.evaluate(inp['expression'], True, **inp['options'])
-        return calculator.history[-1]["result"]
+        return calculator.history[0]["result"]
     except Exception as e:
         print(e)
         resp = make_response(str(e), 500)
