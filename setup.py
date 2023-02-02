@@ -1,5 +1,5 @@
-from logic import tokenizer
-from logic import Calculator
+from logic.rule import Ruleset
+from logic.calculator import Calculator
 from validators import *
 
 # Required for Rule objects (and __subclasses__ method)
@@ -7,47 +7,47 @@ from logic.tokens import operand_tokens, unary_tokens, binary_tokens, function_t
 from logic.tokens.primitive_tokens import *
 
 # Rules
-function = tokenizer.Rule(Function.__subclasses__())
-separator = tokenizer.Rule([BinaryComma])
-constant = tokenizer.Rule([*operand_tokens.Constant.__subclasses__()])
-open_bracket = tokenizer.Rule([OpenBracket])
-close_bracket = tokenizer.Rule([CloseBracket])
-number = tokenizer.Rule([operand_tokens.Number])
-ul_operator = tokenizer.Rule([*unary_tokens.UnaryLeft.__subclasses__()])
-ul_start_operator = tokenizer.Rule([*unary_tokens.UnaryLeft.__subclasses__()])
-b_operator = tokenizer.Rule([*Binary.__subclasses__()])
-ur_operator = tokenizer.Rule([*unary_tokens.UnaryRight.__subclasses__()])
+function = Ruleset(Function.__subclasses__())
+separator = Ruleset([BinaryComma])
+constant = Ruleset([*operand_tokens.Constant.__subclasses__()])
+open_bracket = Ruleset([OpenBracket])
+close_bracket = Ruleset([CloseBracket])
+number = Ruleset([operand_tokens.Number])
+ul_operator = Ruleset([*unary_tokens.UnaryLeft.__subclasses__()])
+ul_start_operator = Ruleset([*unary_tokens.UnaryLeft.__subclasses__()])
+b_operator = Ruleset([*Binary.__subclasses__()])
+ur_operator = Ruleset([*unary_tokens.UnaryRight.__subclasses__()])
 
 # Rules before/after restrictions
-function.add(after=[*open_bracket.group])
-separator.add(
-    after=[*ul_operator.group, *number.group, *open_bracket.group, *constant.group, *function.group]
+function.enclose(after=[*open_bracket.identity])
+separator.enclose(
+    after=[*ul_operator.identity, *number.identity, *open_bracket.identity, *constant.identity, *function.identity]
 )
-constant.add(
-    after=[*ur_operator.group, *close_bracket.group, *b_operator.group, *separator.group, EndAnchor]
+constant.enclose(
+    after=[*ur_operator.identity, *close_bracket.identity, *b_operator.identity, *separator.identity, EndAnchor]
 )
-open_bracket.add(
-    after=[*number.group, *ul_operator.group, *open_bracket.group, *constant.group, *function.group]
+open_bracket.enclose(
+    after=[*number.identity, *ul_operator.identity, *open_bracket.identity, *constant.identity, *function.identity]
 )
-close_bracket.add(
-    after=[*ur_operator.group, *close_bracket.group, *b_operator.group, *separator.group, EndAnchor]
+close_bracket.enclose(
+    after=[*ur_operator.identity, *close_bracket.identity, *b_operator.identity, *separator.identity, EndAnchor]
 )
-number.add(
-    after=[*ur_operator.group, *close_bracket.group, *b_operator.group, *separator.group, EndAnchor]
+number.enclose(
+    after=[*ur_operator.identity, *close_bracket.identity, *b_operator.identity, *separator.identity, EndAnchor]
 )
-ul_operator.add(
-    before=[*b_operator.group, *open_bracket.group, *separator.group],
-    after=[*number.group, *ul_operator.group, *open_bracket.group, *function.group, *constant.group]
+ul_operator.enclose(
+    before=[*b_operator.identity, *open_bracket.identity, *separator.identity],
+    after=[*number.identity, *ul_operator.identity, *open_bracket.identity, *function.identity, *constant.identity]
 )
-ul_start_operator.add(
+ul_start_operator.enclose(
     before=[StartAnchor],
-    after=[*number.group, *ul_operator.group, *open_bracket.group, *function.group, *constant.group]
+    after=[*number.identity, *ul_operator.identity, *open_bracket.identity, *function.identity, *constant.identity]
 )
-b_operator.add(
-    after=[*ul_operator.group, *number.group, *open_bracket.group, *constant.group, *function.group]
+b_operator.enclose(
+    after=[*ul_operator.identity, *number.identity, *open_bracket.identity, *constant.identity, *function.identity]
 )
-ur_operator.add(
-    after=[*separator.group, *ur_operator.group, *number.group, *b_operator.group, *close_bracket.group, EndAnchor]
+ur_operator.enclose(
+    after=[*separator.identity, *ur_operator.identity, *number.identity, *b_operator.identity, *close_bracket.identity, EndAnchor]
 )
 
 # Calculator object

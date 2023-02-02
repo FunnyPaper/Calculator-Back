@@ -1,52 +1,24 @@
 import re
-from collections.abc import Sequence
-from typing import Callable
+from typing import Callable, Iterator
 from .tokens import Token_t, AnyChar
-
-
-class Rule:
-    __group: list[Token_t]
-    __before: list[Token_t]
-    __after: list[Token_t]
-
-    def __init__(self, group: list[Token_t]):
-        if len(group) == 0:
-            raise ValueError("Rule cannot be empty")
-
-        self.__before = []
-        self.__after = []
-
-        # Resolve longer tokens first (for similar tokens pattern - ex FDIV and DIV)
-        self.__group = sorted(group, key=lambda g: len(g.pattern().pattern), reverse=True)
-
-    @property
-    def group(self) -> Sequence[Token_t, ...]:
-        return self.__group
-
-    def add(self, *, before: Sequence[Token_t, ...] = None, after: Sequence[Token_t, ...] = None):
-        self.__before = [*self.__before, *(before or [])]
-        self.__after = [*self.__after, *(after or [])]
-
-    def compile(self) -> re.Pattern:
-        before = '|'.join(map(lambda x: x.pattern().pattern, self.__before))
-        if len(before) > 0:
-            before = fr"(?<={before})"
-
-        after = '|'.join(map(lambda x: x.pattern().pattern, self.__after))
-        if len(after) > 0:
-            after = fr"(?={after})"
-
-        group = '|'.join(map(lambda x: x.pattern().pattern, self.__group))
-        return re.compile(fr"{before}({group}){after}", re.I)
+from .rule import Ruleset
 
 
 class Tokenizer:
-    __rules: dict[str, Rule]
+    """
+    Class abstracting token parsing
+    """
+    __rules: dict[str, Ruleset]
     __tokens: list[Token_t]
-    __validators: tuple[Callable[[list[Token_t]], None]]
+    __validators: tuple[Callable[[list[Token_t]], None], ...]
     __pattern: re.Pattern
 
     def __init__(self):
+        """
+        Constructs new Tokenizer
+        """
+
+        # Initiate fields
         self.__rules = dict()
         self.__tokens = []
         self.__validators = ()
@@ -54,50 +26,108 @@ class Tokenizer:
 
     @property
     def tokens(self) -> list[Token_t]:
+        """
+        Tokens parsed in last parse operation
+
+        :return: List of parsed tokens
+        """
         return self.__tokens
 
-    def set_rules(self, **kwargs: Rule):
+    def set_rules(self, **kwargs: Ruleset) -> None:
+        """
+        Sets ruleset for parsing logic
+
+        :param kwargs: Named rulesets (names are used for exception handling)
+        """
+        # Enforce valid type
         for k, v in kwargs.items():
-            if not isinstance(v, Rule):
-                raise ValueError(f"{k} rule must be an instance of {Rule} or one of it's subclass", str(v))
+            if not isinstance(v, Ruleset):
+                raise ValueError(f"{k} rule must be an instance of {Ruleset} or one of it's subclass", str(v))
 
         self.__rules = kwargs
 
-    def set_validators(self, *validators: Callable[[list[Token_t]], None]):
+    def set_validators(self, *validators: Callable[[list[Token_t]], None]) -> None:
+        """
+        Sets validators for additional checks (they are ignored here)
+
+        :param validators: Callables (called in verify stage of parsing)
+        """
+        # Enforce valid type
+        for v in validators:
+            if not isinstance(v, Callable):
+                raise ValueError(f"{v} must be a callable")
+
         self.__validators = validators
 
-    def parse(self, expression: str) -> Sequence[Token_t, ...]:
-        tokens = self.__tokenize(self.__split(expression))
-        self.verify()
+    def parse(self, expression: str) -> list[Token_t]:
+        """
+        Parses mathematical expression
+
+        :param expression: Stringified mathematical expression
+        :return: List of tokens (tokenized mathematical expression)
+        """
+        # Internal parsing stages
+        # 1. Split expression
+        # 2. Tokenize splitted iterable of match objects (tokens if match object format)
+        # 3. Verify (call set validators)
+        split: Iterator[re.Match] = self.__split(expression)
+        tokens: list[Token_t] = self.__tokenize(split)
+        self.__verify()
 
         return tokens
 
-    def verify(self):
-        for validator in self.__validators:
-            validator(self.__tokens[:])
-
-    def compile(self):
-        self.__rules["invalid"] = Rule([AnyChar])
+    def compile(self) -> None:
+        """
+        Compiles rulesets into regex pattern object for further use
+        """
+        # "invalid" ruleset is reserved for AnyChar (matching entire expression)
+        # in case of unrecognized pattern
+        self.__rules["invalid"] = Ruleset([AnyChar])
         self.__pattern = re.compile(
             fr"""{'|'.join(
                 map(
-                    lambda x: f'(?P<{x}>{self.__rules[x].compile().pattern})', 
+                    lambda x: f'(?P<{x}>{self.__rules[x].regex.pattern})', 
                     self.__rules.keys())
             )}""",
             re.X | re.I
         )
 
-    def __split(self, expression: str) -> list[re.Match, ...]:
+    def __verify(self) -> None:
+        """
+        Calls validators in loop passing copy of token list (user shouldn't change parse result)
+        """
+        for validator in self.__validators:
+            validator(self.__tokens[:])
+
+    def __split(self, expression: str) -> Iterator[re.Match]:
+        """
+        Splits stringified mathematical expression into regex match objects (reflected by set rulesets)
+
+        :param expression: Stringified mathematical expression
+        :return: List of regex match objects
+        """
+        # Check if parse pattern is set
         if not self.__pattern:
             self.compile()
 
-        return list(self.__pattern.finditer(expression))
+        # Extract tokens (as iterable of match objects)
+        return self.__pattern.finditer(expression)
 
-    def __tokenize(self, matches: list[re.Match, ...]) -> list[Token_t, ...]:
+    def __tokenize(self, matches: Iterator[re.Match]) -> list[Token_t]:
+        """
+        Converts iterable of match objects into list of tokens (more readable)
+
+        :param matches: Iterable of match objects
+        :return: List of tokens
+        """
+        # Map every match object into token object by using appropriate constructor
+        # Constructors are matched by checking in order identity of named ruleset that created the match in expression
+        # Every ruleset contains an identity list of token constructors
+        # Regex match is performed by named groups (the same as named ruleset)
         self.__tokens = list(
             map(
                 lambda x: next(
-                    (c for c in self.__rules[x.lastgroup].group if c.pattern().search(x[x.lastgroup])),
+                    (c for c in self.__rules[x.lastgroup].identity if c.pattern().search(x[x.lastgroup])),
                     AnyChar
                 )(x[x.lastgroup], x.start(), x.end()),
                 matches
