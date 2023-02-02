@@ -4,6 +4,9 @@ from .primitive_tokens import Unary, Associativity
 
 
 class UnaryLeft(Unary):
+    """
+    Class for tokens resembling unary operation located on the left side of operand
+    """
     @property
     def precedence(self):
         return 3
@@ -14,26 +17,35 @@ class UnaryLeft(Unary):
 
 
 class UnaryRight(Unary):
+    """
+    Class for tokens resembling unary operation located on the right side of operand
+    """
     @property
     def precedence(self):
         return 4
 
 
 class UnaryMinus(UnaryLeft):
+    """
+    Class for tokens resembling mathematical negate operation
+    """
     def operation(self, pack, **options):
         super().operation(pack)
         return -pack[0]
 
     @staticmethod
-    def pattern():
+    def identity():
         return re.compile(fr"-")
 
 
 class UnaryFactorial(UnaryRight):
+    """
+    Class for tokens resembling mathematical factorial operation
+    """
     def operation(self, pack, **options):
         super().operation(pack)
         return math.gamma(pack[0] + 1)
 
     @staticmethod
-    def pattern():
+    def identity():
         return re.compile(fr"!")

@@ -127,7 +127,7 @@ class Tokenizer:
         self.__tokens = list(
             map(
                 lambda x: next(
-                    (c for c in self.__rules[x.lastgroup].identity if c.pattern().search(x[x.lastgroup])),
+                    (c for c in self.__rules[x.lastgroup].identity if c.identity().search(x[x.lastgroup])),
                     AnyChar
                 )(x[x.lastgroup], x.start(), x.end()),
                 matches

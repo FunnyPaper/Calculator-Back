@@ -33,7 +33,7 @@ class Ruleset:
 
         if sort:
             # Resolve longer tokens first (for similar tokens pattern - ex FDIV and DIV)
-            self.__identity = sorted(identity, key=lambda g: len(g.pattern().pattern), reverse=True)
+            self.__identity = sorted(identity, key=lambda g: len(g.identity().pattern), reverse=True)
         else:
             self.__identity = identity
 
@@ -64,17 +64,17 @@ class Ruleset:
         :return: Ruleset regex pattern object
         """
         # Join lookbehind if before list is not empty
-        before = '|'.join(map(lambda x: x.pattern().pattern, self.__before))
+        before = '|'.join(map(lambda x: x.identity().pattern, self.__before))
         if len(before) > 0:
             before = fr"(?<={before})"
 
         # Join lookahead if after list is not empty
-        after = '|'.join(map(lambda x: x.pattern().pattern, self.__after))
+        after = '|'.join(map(lambda x: x.identity().pattern, self.__after))
         if len(after) > 0:
             after = fr"(?={after})"
 
         # Join identity list
-        identity = '|'.join(map(lambda x: x.pattern().pattern, self.__identity))
+        identity = '|'.join(map(lambda x: x.identity().pattern, self.__identity))
 
         # Compile pattern object
         return re.compile(fr"{before}({identity}){after}", re.I)

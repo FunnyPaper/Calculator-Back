@@ -1,4 +1,4 @@
-from logic.tokens.primitive_tokens import *
+from logic.tokens import *
 
 
 def verify_groups(tokens: list[Token_t]) -> None:

@@ -4,8 +4,11 @@ from .primitive_tokens import Operand
 
 
 class Number(Operand):
+    """
+    Class for tokens resembling numeric operands
+    """
     @staticmethod
-    def pattern() -> re.Pattern:
+    def identity() -> re.Pattern:
         return re.compile(fr"\d+(?:\.\d+)?(?:e(?:-|\+)\d+)?")
 
     @property
@@ -14,12 +17,18 @@ class Number(Operand):
 
 
 class Constant(Operand):
+    """
+    Class for tokens resembling mathematical constants
+    """
     pass
 
 
 class PIConstant(Constant):
+    """
+    Class for tokens resembling PI mathematical constant
+    """
     @staticmethod
-    def pattern() -> re.Pattern:
+    def identity() -> re.Pattern:
         return re.compile(fr"PI", re.I)
 
     @property
@@ -28,8 +37,11 @@ class PIConstant(Constant):
 
 
 class EConstant(Constant):
+    """
+    Class for tokens resembling E mathematical constant
+    """
     @staticmethod
-    def pattern() -> re.Pattern:
+    def identity() -> re.Pattern:
         return re.compile(fr"E", re.I)
 
     @property

@@ -103,9 +103,9 @@ class Calculator:
                     # discard operator (it should be an opening bracket)
                     operators.pop()
 
-            elif issubclass(type(token), (Operator, OpenBracket)):
+            elif issubclass(type(token), Operator):
                 # In case of operator determine how many (if any) operators should be forwarded to result stack
-                # Things to consider are operator precedence and it's associativity
+                # Things to consider are operator precedence, and it's associativity
                 while (len(operators) > 0 and not issubclass(type(operators[-1]), OpenBracket) and
                        (operators[-1].precedence > token.precedence or
                        (operators[-1].precedence == token.precedence and
@@ -138,7 +138,7 @@ class Calculator:
             # For every token try one of possible token case
             try:
                 if issubclass(type(token), Operand):
-                    # Operands are casted by calling their cast method and appended to numbers stack
+                    # Operands are cast by calling their cast method and appended to numbers stack
                     numbers.append(token.cast)
                 elif issubclass(type(token), Binary):
                     # Binary operators expects two arguments
@@ -148,7 +148,7 @@ class Calculator:
                     numbers.append(token.operation(args, **options))
                 elif issubclass(type(token), (Unary, Function)):
                     # Unary operators and functions takes single argument as parameter
-                    # Said argument needs to be flatten (in case of nesting lists produced by binary comma operator)
+                    # Said argument needs to be flattened (in case of nesting lists produced by binary comma operator)
                     numbers.append(token.operation(self.__flatten(numbers.pop()), **options))
             except Exception:
                 # This stage should be inaccessible

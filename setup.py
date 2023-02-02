@@ -4,11 +4,10 @@ from validators import *
 
 # Required for Rule objects (and __subclasses__ method)
 from logic.tokens import operand_tokens, unary_tokens, binary_tokens, function_tokens
-from logic.tokens.primitive_tokens import *
 
 # Rules
 function = Ruleset(Function.__subclasses__())
-separator = Ruleset([BinaryComma])
+separator = Ruleset([binary_tokens.BinaryComma])
 constant = Ruleset([*operand_tokens.Constant.__subclasses__()])
 open_bracket = Ruleset([OpenBracket])
 close_bracket = Ruleset([CloseBracket])
