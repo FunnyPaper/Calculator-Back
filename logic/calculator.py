@@ -36,13 +36,13 @@ class Calculator:
         self.__tokenizer.set_rules(**kwargs)
         self.__tokenizer.compile()
 
-    def set_validators(self, *validators: Callable[[list[Token_t]], None]) -> None:
+    def set_validators(self, **validators: Callable[[list[Token_t]], None]) -> None:
         """
         Sets validators for additional checks (they are ignored here)
 
         :param validators: Callables (called in verify stage of parsing)
         """
-        self.__tokenizer.set_validators(*validators)
+        self.__tokenizer.set_validators(**validators)
 
     def evaluate(self, expression: str, save: bool = False, **operation_options: Union[bool, str]) -> float:
         """

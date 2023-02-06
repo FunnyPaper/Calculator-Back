@@ -1,4 +1,4 @@
-from logic.rule import Ruleset
+from logic.ruleset import Ruleset
 from logic.calculator import Calculator
 from validators import *
 
@@ -66,6 +66,6 @@ calculator.set_rules(
     ur_operator=ur_operator
 )
 calculator.set_validators(
-    verify_groups,
-    verify_functions
+    group=verify_groups,
+    function=verify_functions
 )

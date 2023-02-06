@@ -36,7 +36,7 @@ def verify_functions(tokens: list[Token_t]) -> None:
             length = len(separators)
             if not isinstance(fun, Function) and length > 0:
                 raise ValueError('Separators outside function body', separators, fun)
-            elif length > 0:
+            elif isinstance(fun, Function):
                 # Get function minimum and maximum number of arguments
                 a_min, a_max = fun.args_min_max
                 a_min -= 1
@@ -47,5 +47,9 @@ def verify_functions(tokens: list[Token_t]) -> None:
                         fr'Invalid number of separators. Expected {a_min}-{a_max}. Got {length}', separators
                     )
 
-            # Clear separators list as every separator is valid at this point (list passed limit check)
-            separators.clear()
+            # Return as current bracket group has been proved to be valid
+            return
+
+    # Raise an error as at this point separators are outside any bracket group
+    if len(separators) > 0:
+        raise ValueError('Separators outside bracket group', separators)

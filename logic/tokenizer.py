@@ -1,7 +1,7 @@
 import re
 from typing import Callable, Iterator
 from .tokens import Token_t, AnyChar
-from .rule import Ruleset
+from .ruleset import Ruleset
 
 
 class Tokenizer:
@@ -10,7 +10,7 @@ class Tokenizer:
     """
     __rules: dict[str, Ruleset]
     __tokens: list[Token_t]
-    __validators: tuple[Callable[[list[Token_t]], None], ...]
+    __validators: dict[str, Callable[[list[Token_t]], None]]
     __pattern: re.Pattern
 
     def __init__(self):
@@ -21,7 +21,7 @@ class Tokenizer:
         # Initiate fields
         self.__rules = dict()
         self.__tokens = []
-        self.__validators = ()
+        self.__validators = dict()
         self.__pattern = None
 
     @property
@@ -46,16 +46,16 @@ class Tokenizer:
 
         self.__rules = kwargs
 
-    def set_validators(self, *validators: Callable[[list[Token_t]], None]) -> None:
+    def set_validators(self, **validators: Callable[[list[Token_t]], None]) -> None:
         """
         Sets validators for additional checks (they are ignored here)
 
         :param validators: Callables (called in verify stage of parsing)
         """
         # Enforce valid type
-        for v in validators:
+        for k, v in validators.items():
             if not isinstance(v, Callable):
-                raise ValueError(f"{v} must be a callable")
+                raise ValueError(f"{k} validator must be a callable", str(v))
 
         self.__validators = validators
 
@@ -96,8 +96,8 @@ class Tokenizer:
         """
         Calls validators in loop passing copy of token list (user shouldn't change parse result)
         """
-        for validator in self.__validators:
-            validator(self.__tokens[:])
+        for k, v in self.__validators.items():
+            v(self.__tokens[:])
 
     def __split(self, expression: str) -> Iterator[re.Match]:
         """
