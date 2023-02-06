@@ -126,7 +126,7 @@ class Calculator:
 
         return result
 
-    def __evaluate_rpn(self, rpn: list[Token_t, ...], **options: Union[bool, str]) -> float:
+    def __evaluate_rpn(self, rpn: list[Token_t], **options: Union[bool, str]) -> float:
         """
         Evaluates given list of tokens in rpn order
 
