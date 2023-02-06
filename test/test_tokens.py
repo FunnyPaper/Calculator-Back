@@ -28,6 +28,8 @@ class TestTokens(unittest.TestCase):
         self.assertEqual(BinaryExponent("^", 0, 0).operation([2, 3]), 8)
         self.assertRaises(ValueError, BinaryExponent, 'a', 0, 0)
 
+        self.assertRaises(OperationArgumentsException, BinaryPlus('+', 0, 0).operation, [5])
+
     def test_function(self):
         self.assertEqual(FunctionModulo("mod", 0, 0).operation([120, 111, 5]), 4)
         self.assertEqual(FunctionModulo("mod", 0, 0).operation([2]), 2)
@@ -86,6 +88,8 @@ class TestTokens(unittest.TestCase):
         self.assertEqual(FunctionLn("ln", 0, 0).operation([math.e]), 1)
         self.assertRaises(ValueError, FunctionLn, 'a', 0, 0)
 
+        self.assertRaises(OperationArgumentsException, FunctionAdd('add', 0, 0).operation, [])
+
     def test_operand(self):
         self.assertEqual(Number("4", 0, 0).cast, 4)
         self.assertRaises(ValueError, Number, 'a', 0, 0)
@@ -102,6 +106,8 @@ class TestTokens(unittest.TestCase):
 
         self.assertEqual(UnaryFactorial('!', 0, 0).operation([6]), 720)
         self.assertRaises(ValueError, UnaryFactorial, 'a', 0, 0)
+
+        self.assertRaises(OperationArgumentsException, UnaryMinus('-', 0, 0).operation, [9, 7])
 
     def test_primitive(self):
         self.assertRaises(ValueError, OpenBracket, 'a', 0, 0)

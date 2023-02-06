@@ -1,6 +1,7 @@
 import math
 import unittest
 from setup import *
+from logic.errors import *
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -35,12 +36,12 @@ class TestCalculatorGeneral(unittest.TestCase):
         self.assertRaises(TypeError, self.calculator.evaluate, [])
 
     def test_evaluate_invalid_expression(self):
-        self.assertRaises(ValueError, self.calculator.evaluate, "token")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "token")
         self.calculator.set_validators(
             group=verify_groups,
         )
-        self.assertRaises(ValueError, self.calculator.evaluate, "token")
-        self.assertRaises(ValueError, self.calculator.evaluate, ")-8-(")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "token")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, ")-8-(")
 
     def test_evaluate_with_brackets(self):
         self.calculator.set_rules(

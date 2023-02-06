@@ -1,4 +1,5 @@
 from logic.tokens import *
+from logic.errors import *
 
 
 def verify_groups(tokens: list[Token_t]) -> None:
@@ -9,7 +10,7 @@ def verify_groups(tokens: list[Token_t]) -> None:
     """
     invalid = next(filter(lambda x: isinstance(x, AnyChar), tokens), None)
     if invalid is not None:
-        raise ValueError('Invalid expression', invalid)
+        raise UnrecognizedTokenException('Invalid expression', invalid)
 
 
 def verify_functions(tokens: list[Token_t]) -> None:
@@ -35,7 +36,7 @@ def verify_functions(tokens: list[Token_t]) -> None:
             fun = tokens.pop() if len(tokens) > 0 else None
             length = len(separators)
             if not isinstance(fun, Function) and length > 0:
-                raise ValueError('Separators outside function body', separators, fun)
+                raise SeparatorException('Separators outside function body', separators, fun)
             elif isinstance(fun, Function):
                 # Get function minimum and maximum number of arguments
                 a_min, a_max = fun.args_min_max
@@ -43,7 +44,7 @@ def verify_functions(tokens: list[Token_t]) -> None:
                 a_max -= 1
                 # Raise and error if counted arguments exceed function arguments limit
                 if not (a_min <= length <= a_max):
-                    raise ValueError(
+                    raise SeparatorException(
                         fr'Invalid number of separators. Expected {a_min}-{a_max}. Got {length}', separators
                     )
 
@@ -52,4 +53,4 @@ def verify_functions(tokens: list[Token_t]) -> None:
 
     # Raise an error as at this point separators are outside any bracket group
     if len(separators) > 0:
-        raise ValueError('Separators outside bracket group', separators)
+        raise SeparatorException('Separators outside bracket group', separators)

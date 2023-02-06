@@ -2,6 +2,7 @@ from . import tokenizer
 from typing import Callable
 import collections.abc
 from .tokens import *
+from .errors import *
 
 
 class Calculator:
@@ -117,7 +118,7 @@ class Calculator:
                 operators.append(token)
             else:
                 # In any other case given token is completely unrecognized by calculator
-                raise ValueError(f"Invalid token {token}")
+                raise UnrecognizedTokenException(f"Invalid token {token}")
         else:
             # Remaining operators goes to the end of rpn
             while len(operators) > 0:
@@ -153,7 +154,7 @@ class Calculator:
             except Exception:
                 # This stage should be inaccessible
                 # (otherwise something went wrong stage earlier or operators were misinterpreted)
-                raise ValueError(f"Unexpected error. Evaluation failed on token {token}")
+                raise CalculationException(f"Unexpected error. Evaluation failed on token {token}")
 
         return numbers[0] if len(numbers) > 0 else 0.0
 

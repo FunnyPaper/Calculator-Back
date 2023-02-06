@@ -59,4 +59,4 @@ class TestCalculatorCompoundExpressions(unittest.TestCase):
         )
 
     def test_expression_10(self):
-        self.assertRaises(ValueError, self.calculator.evaluate, "3/0")
+        self.assertRaises(CalculationException, self.calculator.evaluate, "3/0")

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from enum import IntEnum
 from typing import TypeVar, Union
+from ..errors import OperationArgumentsException
 
 
 @dataclass(frozen=True)
@@ -143,7 +144,7 @@ class Operator(Token):
         # Enforce given arguments number to lie between bounds
         x, y = self.args_min_max
         if not (x <= len(pack) <= y):
-            raise ValueError('To much operands passed')
+            raise OperationArgumentsException('To much operands passed')
 
         return 0
 

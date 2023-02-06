@@ -13,11 +13,11 @@ class TestCalculatorValidators(unittest.TestCase):
         )
 
     def test_anything_is_invalid(self):
-        self.assertRaises(ValueError, self.calculator.evaluate, "1+2")
-        self.assertRaises(ValueError, self.calculator.evaluate, "3")
-        self.assertRaises(ValueError, self.calculator.evaluate, "-1")
-        self.assertRaises(ValueError, self.calculator.evaluate, "3^5")
-        self.assertRaises(ValueError, self.calculator.evaluate, "Min(Max(4,5),6)")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "1+2")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "3")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "-1")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "3^5")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "Min(Max(4,5),6)")
 
     def test_invalid_function(self):
         self.calculator.set_rules(
@@ -27,13 +27,13 @@ class TestCalculatorValidators(unittest.TestCase):
             close_bracket=close_bracket,
             number=number,
         )
-        self.assertRaises(ValueError, self.calculator.evaluate, "add(2,)")
-        self.assertRaises(ValueError, self.calculator.evaluate, "fdiv(,2)")
-        self.assertRaises(ValueError, self.calculator.evaluate, "mul(,)")
-        self.assertRaises(ValueError, self.calculator.evaluate, "sub()")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "add(2,)")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "fdiv(,2)")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "mul(,)")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "sub()")
 
     def test_only_included_groups_are_valid(self):
-        self.assertRaises(ValueError, self.calculator.evaluate, "2")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "2")
         self.calculator.set_rules(
             number=number,
         )
@@ -46,14 +46,14 @@ class TestCalculatorValidators(unittest.TestCase):
             number=number,
         )
         self.assertEqual(self.calculator.evaluate("add(4,5,6)"), 15)
-        self.assertRaises(ValueError, self.calculator.evaluate, "4+5+6")
-        self.assertRaises(ValueError, self.calculator.evaluate, "e")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "4+5+6")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "e")
         self.calculator.set_rules(
             constant=constant,
             number=number,
             b_operator=b_operator,
         )
-        self.assertRaises(ValueError, self.calculator.evaluate, "add(4,5,6)")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "add(4,5,6)")
         self.assertEqual(self.calculator.evaluate("4+5+6"), 15)
         self.assertEqual(self.calculator.evaluate("e"), math.e)
 
@@ -67,16 +67,18 @@ class TestCalculatorValidators(unittest.TestCase):
             b_operator=b_operator
         )
 
-        self.assertRaises(ValueError, self.calculator.evaluate, "6,7+log(100,2)")
-        self.assertRaises(ValueError, self.calculator.evaluate, "6+(100,2)")
-        self.assertRaises(ValueError, self.calculator.evaluate, "(100,2)")
+        self.assertRaises(SeparatorException, self.calculator.evaluate, "6,7+log(100,2)")
+        self.assertRaises(SeparatorException, self.calculator.evaluate, "6+(100,2)")
+        self.assertRaises(SeparatorException, self.calculator.evaluate, "(100,2)")
 
     def test_function_arg_limit_exceeded(self):
         self.calculator.set_rules(
+            open_bracket=open_bracket,
+            close_bracket=close_bracket,
             function=function,
             separator=separator,
             number=number
         )
 
-        self.assertRaises(ValueError, self.calculator.evaluate, "sin(7,6)")
-        self.assertRaises(ValueError, self.calculator.evaluate, "sin")
+        self.assertRaises(SeparatorException, self.calculator.evaluate, "sin(7,6)")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "sin")

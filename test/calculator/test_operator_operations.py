@@ -48,4 +48,4 @@ class TestCalculatorOperatorOperations(unittest.TestCase):
         self.assertEqual(self.calculator.evaluate("3!!"), 720)
 
     def test_double_binary(self):
-        self.assertRaises(ValueError, self.calculator.evaluate, "2/+7")
+        self.assertRaises(UnrecognizedTokenException, self.calculator.evaluate, "2/+7")
