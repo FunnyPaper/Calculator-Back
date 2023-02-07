@@ -1,5 +1,6 @@
 import re
 import math
+from typing import Union
 from .primitive_tokens import Unary, Associativity
 
 
@@ -29,7 +30,7 @@ class UnaryMinus(UnaryLeft):
     """
     Class for tokens resembling mathematical negate operation
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         return -pack[0]
 
@@ -42,7 +43,7 @@ class UnaryFactorial(UnaryRight):
     """
     Class for tokens resembling mathematical factorial operation
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         return math.gamma(pack[0] + 1)
 

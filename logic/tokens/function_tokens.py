@@ -1,6 +1,7 @@
 from functools import reduce
 import math
 import re
+from typing import Union
 from .primitive_tokens import Function
 
 
@@ -9,7 +10,7 @@ class FunctionModulo(Function):
     """
     Class for tokens resembling mathematical modulo function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + reduce(lambda a, b: a % b, pack)
 
     @staticmethod
@@ -21,7 +22,7 @@ class FunctionFloorDivision(Function):
     """
     Class for tokens resembling mathematical floor division function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + (reduce(lambda a, b: a // b, pack) if len(pack) > 1 else pack[0] // 1)
 
     @staticmethod
@@ -33,7 +34,7 @@ class FunctionMin(Function):
     """
     Class for tokens resembling mathematical minimum function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + min(pack)
 
     @staticmethod
@@ -45,7 +46,7 @@ class FunctionMax(Function):
     """
     Class for tokens resembling mathematical maximum function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + max(pack)
 
     @staticmethod
@@ -57,7 +58,7 @@ class FunctionRoot(Function):
     """
     Class for tokens resembling mathematical root function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         s = super().operation(pack)
         return s + (reduce(lambda a, b: a ** (1/b), pack) if len(pack) > 1 else pack[0] ** 0.5)
 
@@ -70,7 +71,7 @@ class FunctionPow(Function):
     """
     Class for tokens resembling mathematical power function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         s = super().operation(pack)
         return s + (reduce(lambda a, b: a ** b, pack) if len(pack) > 1 else pack[0] ** 2)
 
@@ -83,7 +84,7 @@ class FunctionLog(Function):
     """
     Class for tokens resembling mathematical logarithm function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         s = super().operation(pack)
         return s + (reduce(lambda a, b: math.log(a, b), pack) if len(pack) > 1 else math.log10(pack[0]))
 
@@ -96,7 +97,7 @@ class FunctionAdd(Function):
     """
     Class for tokens resembling mathematical add function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + sum(pack)
 
     @staticmethod
@@ -108,7 +109,7 @@ class FunctionSubtract(Function):
     """
     Class for tokens resembling mathematical subtract function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + reduce(lambda a, b: a - b, pack)
 
     @staticmethod
@@ -120,7 +121,7 @@ class FunctionMultiply(Function):
     """
     Class for tokens resembling mathematical multiply function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + reduce(lambda a, b: a * b, pack)
 
     @staticmethod
@@ -132,7 +133,7 @@ class FunctionDivide(Function):
     """
     Class for tokens resembling mathematical divide function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         return super().operation(pack) + reduce(lambda a, b: a / b, pack)
 
     @staticmethod
@@ -145,7 +146,7 @@ class FunctionSin(Function):
     """
     Class for tokens resembling mathematical sine function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         rad: bool = options.get('rad') or False
         return super().operation(pack) + math.sin(pack[0] if not rad else math.radians(pack[0]))
 
@@ -162,7 +163,7 @@ class FunctionCos(Function):
     """
     Class for tokens resembling mathematical cosine function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         rad: bool = options.get('rad') or False
         return super().operation(pack) + math.cos(pack[0] if not rad else math.radians(pack[0]))
 
@@ -179,7 +180,7 @@ class FunctionTan(Function):
     """
     Class for tokens resembling mathematical tangent function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         rad: bool = options.get('rad') or False
         return super().operation(pack) + math.tan(pack[0] if not rad else math.radians(pack[0]))
 
@@ -196,7 +197,7 @@ class FunctionLn(Function):
     """
     Class for tokens resembling mathematical natural logarithm function
     """
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         s = super().operation(pack)
         return s + math.log(pack[0], math.e)
 

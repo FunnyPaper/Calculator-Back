@@ -1,4 +1,5 @@
 import re
+from typing import Union
 from .primitive_tokens import Binary, Associativity
 
 
@@ -10,7 +11,7 @@ class BinaryComma(Binary):
     def precedence(self):
         return 0
 
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         x, y = pack
         return ([*x] if isinstance(x, list) else [x]) + ([*y] if isinstance(y, list) else [y])
@@ -28,7 +29,7 @@ class BinaryPlus(Binary):
     def precedence(self):
         return 1
 
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         x, y = pack
         return x + y
@@ -46,7 +47,7 @@ class BinaryMinus(Binary):
     def precedence(self):
         return 1
 
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         x, y = pack
         return x - y
@@ -64,7 +65,7 @@ class BinaryMultiply(Binary):
     def precedence(self):
         return 2
 
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         x, y = pack
         return x * y
@@ -82,7 +83,7 @@ class BinaryDivide(Binary):
     def precedence(self):
         return 2
 
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         x, y = pack
         return x / y
@@ -100,7 +101,7 @@ class BinaryModulo(Binary):
     def precedence(self):
         return 2
 
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         x, y = pack
         return x % y
@@ -122,7 +123,7 @@ class BinaryExponent(Binary):
     def associativity(self):
         return Associativity.RTL
 
-    def operation(self, pack, **options):
+    def operation(self, pack: list[float], **options: Union[bool, str]):
         super().operation(pack)
         x, y = pack
         return x ** y

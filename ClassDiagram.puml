@@ -8,180 +8,224 @@ package logic {
     package tokens {
         package primitive_tokens {
             class Token {
+                --Fields--
+                value : str
+                begin : int
+                end : int
+                --Methods--
                 +{abstract} {static} {method} identity() : re.Pattern
                 +{method} __post_init__(self)
             }
             class _Special extends Token
             class OpenBracket extends _Special {
+                --Overrides--
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class CloseBracket extends _Special {
+                --Overrides--
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class EndAnchor extends _Special {
+                --Overrides--
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class StartAnchor extends _Special {
+                --Overrides--
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class AnyChar extends _Special {
+                --Overrides--
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class Operand extends Token {
+                --Accessors--
                 +{abstract} {field} cast
             }
             enum Associativity {
                 LTR, RTL
             }
             class Operator extends Token {
+                --Accessors--
                 +{abstract} {field} precedence : int
                 +{field} associativity : Associativity
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
                 +{field} args_min_max : tuple[float,float]
+                --Methods--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
             }
             class Binary extends Operator {
+                --Overrides--
                 +{field} args_min_max : tuple[float,float]
             }
             class Unary extends Operator {
+                --Overrides--
                 +{field} args_min_max : tuple[float,float]
             }
             class Function extends Operator {
+                --Overrides--
                 +{field} precedence : int
             }
-            Operator <- Associativity
         }
         package operand_tokens {
             class Number extends Operand  {
-                 +{abstract} {static} {method} identity() : re.Pattern
-                 +{abstract} {field} cast
+                --Overrides--
+                +{abstract} {static} {method} identity() : re.Pattern
+                +{abstract} {field} cast
             }
             class Constant extends Operand
             class PIConstant extends Constant {
-                 +{abstract} {static} {method} identity() : re.Pattern
-                 +{abstract} {field} cast
+                --Overrides--
+                +{abstract} {static} {method} identity() : re.Pattern
+                +{abstract} {field} cast
             }
             class EConstant extends Constant {
-                 +{abstract} {static} {method} identity() : re.Pattern
-                 +{abstract} {field} cast
+                --Overrides--
+                +{abstract} {static} {method} identity() : re.Pattern
+                +{abstract} {field} cast
             }
         }
         package unary_tokens {
             class UnaryLeft extends Unary {
+                --Overrides--
                 +{field} precedence : int
                 +{field} associativity : Associativity
             }
             class UnaryRight extends Unary {
+                --Overrides--
                 +{field} precedence : int
             }
             class UnaryMinus extends UnaryLeft {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class UnaryFactorial extends UnaryRight {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
         }
         package binary_tokens {
             class BinaryComma extends Binary {
+                --Overrides--
                 +{abstract} {field} precedence : int
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class BinaryPlus extends Binary {
+                --Overrides--
                 +{abstract} {field} precedence : int
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class BinaryMinus extends Binary {
+                --Overrides--
                 +{abstract} {field} precedence : int
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class BinaryMultiply extends Binary {
+                --Overrides--
                 +{abstract} {field} precedence : int
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class BinaryDivide extends Binary {
+                --Overrides--
                 +{abstract} {field} precedence : int
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class BinaryModulo extends Binary {
+                --Overrides--
                 +{abstract} {field} precedence : int
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class BinaryExponent extends Binary {
+                --Overrides--
                 +{abstract} {field} precedence : int
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
                 +{field} associativity : Associativity
             }
         }
         package function_tokens {
             class FunctionModulo extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionFloorDivision extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionMin extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionMax extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionRoot extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionPow extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionLog extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionAdd extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionSubtract extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionMultiply extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionDivide extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
             }
             class FunctionSin extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
                 +{field} args_min_max : tuple[float,float]
             }
             class FunctionCos extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
                 +{field} args_min_max : tuple[float,float]
             }
             class FunctionTan extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
                 +{field} args_min_max : tuple[float,float]
             }
             class FunctionLn extends Function {
-                +{abstract} {method} operation(self,list[float],**Union[bool,str]) : float
+                --Overrides--
+                +{abstract} {method} operation(self, pack: list[float], **options: Union[bool, str]) : float
                 +{abstract} {static} {method} identity() : re.Pattern
                 +{field} args_min_max : tuple[float,float]
             }
@@ -190,35 +234,53 @@ package logic {
 
     package calculator {
         class Calculator {
+            --Fields--
+            __tokenizer : tokenizer.Tokenizer
+            __history : list[dict[str, str]]
+            --Methods--
             +{method} __init__(self)
-            +{field} history : list[dict[str,str]]
-            +{method} set_rules(self,**Ruleset) : None
-            +{method} set_validators(self,**Callable[[list[Token]],None]) : None
-            +{method} evaluate(self,str,bool,**Union[bool, str]) : float
-            -{method} __to_rpn(self,list[Token]) : list[Token]
-            -{method} __evaluate_rpn(self,list[Token, ...],**Union[bool, str]) : float
+            +{method} set_rules(self, **kwargs: Ruleset) : None
+            +{method} set_validators(self, **validators: Callable[[list[Token_t]], None]) : None
+            +{method} evaluate(self, expression: str, save: bool = False, **operation_options: Union[bool, str]) : float
+            -{method} __to_rpn(self, tokens: list[Token_t]) : list[Token]
+            -{method} __evaluate_rpn(self, rpn: list[Token_t], **options: Union[bool, str]) : float
             -{method} __flatten(self, x) : list
+            --Accessors--
+            +{field} history : list[dict[str,str]]
         }
     }
     package ruleset {
         class Ruleset {
+            --Fields--
+            __identity : list[Type[Token_t]]
+            __before : list[Type[Token_t]]
+            __after : list[Type[Token_t]]
+            --Methods--
             +{method} __init__(self,list[Type[Token]],*,before=list[Type[Token]],after=list[Type[Token]],save=bool])
-            +{field} identity : list[Type[Token]]
             +{method} enclose(self,*,before=list[Type[Token]],after=list[Type[Token]]]) : None
+            --Accessors--
+            +{field} identity : list[Type[Token]]
             +{field} regex : re.Pattern
         }
     }
     package tokenizer {
         class Tokenizer {
+            --Fields--
+            __rules : dict[str, Ruleset]
+            __tokens : list[Token_t]
+            __validators : dict[str, Callable[[list[Token_t]], None]]
+            __pattern : re.Pattern
+            --Methods--
             +{method} __init__(self)
-            +{field} tokens : list[Token]
-            +{method} set_rules(self,**Ruleset) : None
-            +{method} set_validators(self,**Callable[[list[Token]], None]) : None
-            +{method} parse(self,str) : list[Token]
+            +{method} set_rules(self, **kwargs: Ruleset) : None
+            +{method} set_validators(self, **validators: Callable[[list[Token_t]], None]) : None
+            +{method} parse(self, expression: str) : list[Token]
             +{method} compile(self) : None
             -{method} __verify(self) : None
-            -{method} __split(self,str) : Iterator[re.Match]
-            -{method} __tokenize(Iterator[re.Match]) : list[Token]
+            -{method} __split(self, expression: str) : Iterator[re.Match]
+            -{method} __tokenize(self, matches: Iterator[re.Match]) : list[Token]
+            --Accessors--
+            +{field} tokens : list[Token]
         }
     }
     package errors {
@@ -227,23 +289,26 @@ package logic {
         class CalculationException
         class SeparatorException
     }
-    Calculator *- Tokenizer
-    Calculator <- Ruleset
-    Calculator <- Token
-    Calculator <- UnrecognizedTokenException
-    Calculator <- CalculationException
-
-    Tokenizer o- Ruleset
-    Tokenizer o- Token
-
-    Ruleset o-- Token
-
-    operand_tokens <-[hidden]up- primitive_tokens
-
-    primitive_tokens <-[hidden]up function_tokens
-    function_tokens <-[hidden]up- binary_tokens
-
-    unary_tokens <-[hidden]up operand_tokens
 }
+
+Operator "*" <- "1" Associativity
+
+Calculator "1" *- "1" Tokenizer
+Calculator "1" <- "*" Ruleset
+Calculator "1" <- "*" Token
+Calculator "1" <- "*" UnrecognizedTokenException
+Calculator "1" <- "*" CalculationException
+
+Tokenizer "1" o- "1.." Ruleset
+Tokenizer "1" o- "*" Token
+
+Ruleset "*" o-- "*" Token
+
+operand_tokens <-[hidden]up- primitive_tokens
+
+primitive_tokens <-[hidden]up function_tokens
+function_tokens <-[hidden]up- binary_tokens
+
+unary_tokens <-[hidden]up operand_tokens
 
 @enduml
