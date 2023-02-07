@@ -25,3 +25,9 @@ Wykonywanie operacji:
 Sprawdzanie historii:
 
     curl localhost:5000/history
+
+## Uruchamianie testów
+Testy wykonane z pomocą środowiska [Unittest](https://docs.python.org/3/library/unittest.html) i [Coverage](https://coverage.readthedocs.io/en/7.1.0/):
+
+    coverage run -m unittest
+    coverage report
