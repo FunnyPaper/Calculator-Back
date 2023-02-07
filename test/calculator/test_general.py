@@ -52,7 +52,7 @@ class TestCalculatorGeneral(unittest.TestCase):
             ul_start_operator=ul_start_operator,
             b_operator=b_operator,
         )
-        self.assertEqual(self.calculator.evaluate("(2-(-5/2)*4)^2"), 144)
+        self.assertEqual(self.calculator.evaluate("(2 - (-5/2) * 4)^2"), 144)
 
     def test_evaluate_pi_constant(self):
         self.calculator.set_rules(

@@ -111,7 +111,7 @@ class Tokenizer:
             self.compile()
 
         # Extract tokens (as iterable of match objects)
-        return self.__pattern.finditer(expression)
+        return self.__pattern.finditer(re.sub(r"\s", '', expression))
 
     def __tokenize(self, matches: Iterator[re.Match]) -> list[Token_t]:
         """
