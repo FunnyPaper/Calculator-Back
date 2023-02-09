@@ -72,7 +72,7 @@ class Calculator:
         if save:
             # Trim leading 0 in floats such that ex 1.0 becomes 1 but 1.02 is still 1.02
             # (for readability)
-            stringified_result: str = re.sub('.0$', '', str(result))
+            stringified_result: str = re.sub(r'\.0$', '', str(result))
             self.__history.insert(0, {'expression': expression, 'result': stringified_result})
 
         return result
