@@ -154,7 +154,7 @@ class Calculator:
             except Exception:
                 # This stage should be inaccessible
                 # (otherwise something went wrong stage earlier or operators were misinterpreted)
-                raise CalculationException(f"Unexpected error. Evaluation failed on token {token}")
+                raise CalculationException(f"{e} - {token}")
 
         return numbers[0] if len(numbers) > 0 else 0.0
 
