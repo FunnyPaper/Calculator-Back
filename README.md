@@ -1,4 +1,7 @@
 # CalculatorBack
+
+Projekt stworzony z pomocą [PyCharm](https://www.jetbrains.com/pycharm/).
+
 ## Zależności projektu
 Wszystkie niezbędne moduły znajdują się w pliku *requirements.txt*. Instalacja:
 
