@@ -151,7 +151,7 @@ class Calculator:
                     # Unary operators and functions takes single argument as parameter
                     # Said argument needs to be flattened (in case of nesting lists produced by binary comma operator)
                     numbers.append(token.operation(self.__flatten(numbers.pop()), **options))
-            except Exception:
+            except Exception as e:
                 # This stage should be inaccessible
                 # (otherwise something went wrong stage earlier or operators were misinterpreted)
                 raise CalculationException(f"{e} - {token}")
